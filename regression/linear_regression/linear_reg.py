@@ -22,3 +22,9 @@ class LinearRegression:
         self.current_bias = 0
         self.number_of_iterations = number_of_iterations
         self.learning_rate = learning_rate
+
+    def model_prediction_array(self) -> np.ndarray:
+        prediction = self.current_weight \
+                     * self.training_data.feature_data[:, self.feature_idx_for_regression] \
+                     + self.current_bias
+        return prediction
