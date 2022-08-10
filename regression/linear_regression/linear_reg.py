@@ -51,3 +51,20 @@ class LinearRegression:
         derivative_cost_wrt_bias = sum_array_of_derivatives_cost_wrt_bias / dataset_size
 
         return derivative_cost_wrt_weight, derivative_cost_wrt_bias
+
+    def gradient_descent(self):
+        cost_over_time = []
+        weight_over_time = []
+
+        for i in range(self.number_of_iterations):
+            model_predictions_array = self.model_prediction_array()
+            derivative_cost_wrt_weight, derivative_cost_wrt_bias = \
+                self.compute_gradients(model_predictions_array)
+
+            self.current_weight = self.current_weight - self.learning_rate * derivative_cost_wrt_weight
+            self.current_bias = self.current_bias - self.learning_rate * derivative_cost_wrt_bias
+
+            print(f"weight {self.current_weight} bias {self.current_bias}")
+            total_cost = self.compute_total_cost()
+            cost_over_time.append(total_cost)
+            weight_over_time.append(self.current_weight)
