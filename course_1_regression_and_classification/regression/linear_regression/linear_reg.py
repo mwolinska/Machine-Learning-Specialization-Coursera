@@ -3,7 +3,7 @@ from typing import Tuple
 import numpy as np
 from matplotlib import pyplot as plt
 
-from regression.dataset_processing.dataset_data_model import Dataset
+from course_1_regression_and_classification.regression.dataset_processing.dataset_data_model import Dataset
 
 class LinearRegression:
     def __init__(
