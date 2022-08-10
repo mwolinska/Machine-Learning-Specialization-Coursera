@@ -28,3 +28,10 @@ class LinearRegression:
                      * self.training_data.feature_data[:, self.feature_idx_for_regression] \
                      + self.current_bias
         return prediction
+
+    def compute_total_cost(self):
+        model_predictions = self.model_prediction_array()
+        dataset_size = self.training_data.feature_data.shape[0]
+        cost_array = (model_predictions - self.training_data.label_data) ** 2
+        total_cost = np.sum(cost_array) / (2 * dataset_size)
+        return total_cost
