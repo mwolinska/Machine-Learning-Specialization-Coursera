@@ -68,3 +68,9 @@ class LinearRegression:
             total_cost = self.compute_total_cost()
             cost_over_time.append(total_cost)
             weight_over_time.append(self.current_weight)
+
+        # plt.plot(cost_over_time)
+        # plt.show()
+        plt.scatter(self.training_data.feature_data[:, self.feature_idx_for_regression], self.training_data.label_data)
+        plt.plot(self.training_data.feature_data[:, self.feature_idx_for_regression], model_predictions_array, color="red")
+        plt.show()
