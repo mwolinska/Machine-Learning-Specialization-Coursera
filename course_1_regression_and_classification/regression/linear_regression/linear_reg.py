@@ -9,19 +9,11 @@ class LinearRegression:
     def __init__(
         self,
         training_dataset: Dataset,
-        validate_dataset: Dataset,
-        test_dataset: Dataset,
-        number_of_iterations: int = 1500,
-        learning_rate: float = 0.01
     ):
         self.training_data = training_dataset
-        self.test_data = test_dataset
-        self.validation_data = validate_dataset
         self.feature_idx_for_regression = 0
         self.current_weight = 0
         self.current_bias = 0
-        self.number_of_iterations = number_of_iterations
-        self.learning_rate = learning_rate
 
     def model_prediction_array(self) -> np.ndarray:
         prediction = self.current_weight \
@@ -52,17 +44,17 @@ class LinearRegression:
 
         return derivative_cost_wrt_weight, derivative_cost_wrt_bias
 
-    def gradient_descent(self):
+    def gradient_descent(self, learning_rate: float = 0.01, number_of_iterations: int = 1000):
         cost_over_time = []
         weight_over_time = []
 
-        for i in range(self.number_of_iterations):
+        for i in range(number_of_iterations):
             model_predictions_array = self.model_prediction_array()
             derivative_cost_wrt_weight, derivative_cost_wrt_bias = \
                 self.compute_gradients(model_predictions_array)
 
-            self.current_weight = self.current_weight - self.learning_rate * derivative_cost_wrt_weight
-            self.current_bias = self.current_bias - self.learning_rate * derivative_cost_wrt_bias
+            self.current_weight = self.current_weight - learning_rate * derivative_cost_wrt_weight
+            self.current_bias = self.current_bias - learning_rate * derivative_cost_wrt_bias
 
             print(f"weight {self.current_weight} bias {self.current_bias}")
             total_cost = self.compute_total_cost()
