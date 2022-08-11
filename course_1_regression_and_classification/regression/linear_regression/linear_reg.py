@@ -1,9 +1,9 @@
-from typing import Tuple
+from typing import Tuple, List
 
 import numpy as np
-from matplotlib import pyplot as plt
 
 from course_1_regression_and_classification.regression.dataset_processing.dataset_data_model import Dataset
+
 
 class LinearRegression:
     def __init__(
@@ -18,7 +18,6 @@ class LinearRegression:
         self.best_weight = initial_weight
         self.best_bias = initial_bias
         self.dataset_size = self.training_data.feature_data.shape[0]
-        self.cost_over_time = []
 
     def model_prediction_array(self) -> np.ndarray:
         prediction = self.best_weight \
@@ -59,12 +58,15 @@ class LinearRegression:
             self.best_weight = self.best_weight - learning_rate * derivative_cost_wrt_weight
             self.best_bias = self.best_bias - learning_rate * derivative_cost_wrt_bias
 
-            print(f"weight {self.best_weight} bias {self.best_bias}")
             total_cost = self.compute_total_cost(model_predictions_array)
             cost_over_time.append(total_cost)
 
-        plt.plot(cost_over_time)
-        plt.show()
-        # plt.scatter(self.training_data.feature_data[:, self.feature_index], self.training_data.label_data)
-        # plt.plot(self.training_data.feature_data[:, self.feature_index], model_predictions_array, color="red")
-        # plt.show()
+        model_predictions = list(model_predictions_array)
+        return cost_over_time, model_predictions
+
+    def return_training_data_for_plotting(self) -> Dataset:
+        """Return training data (feature and labels) used for regression. """
+        return Dataset.from_dataset(
+            self.training_data,
+            feature_row_tuple=(None, None),
+            feature_column_tuple=(self.feature_index, self.feature_index + 1))
