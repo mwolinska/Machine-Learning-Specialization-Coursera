@@ -18,6 +18,7 @@ class LinearRegression:
         self.best_weight = initial_weight
         self.best_bias = initial_bias
         self.dataset_size = self.training_data.feature_data.shape[0]
+        self.cost_over_time = []
 
     def model_prediction_array(self) -> np.ndarray:
         prediction = self.best_weight \
@@ -31,28 +32,28 @@ class LinearRegression:
         return total_cost
 
     def compute_gradients(self, model_predictions: np.ndarray) -> Tuple[float, float]:
+        array_of_derivatives_cost_wrt_bias, array_of_derivatives_cost_wrt_weight = \
+            self.compute_derivative_arrays(model_predictions)
+
         derivative_cost_wrt_bias = np.sum(array_of_derivatives_cost_wrt_bias) / self.dataset_size
         derivative_cost_wrt_weight = np.sum(array_of_derivatives_cost_wrt_weight) / self.dataset_size
+
+        return derivative_cost_wrt_bias, derivative_cost_wrt_weight
+
+    def compute_derivative_arrays(self, model_predictions: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         array_of_derivatives_cost_wrt_bias = model_predictions - \
                                                self.training_data.label_data
         array_of_derivatives_cost_wrt_weight = array_of_derivatives_cost_wrt_bias \
             * self.training_data.feature_data[:, self.feature_index]
-
-        sum_array_of_derivatives_cost_wrt_weight = np.sum(array_of_derivatives_cost_wrt_weight)
-        sum_array_of_derivatives_cost_wrt_bias = np.sum(array_of_derivatives_cost_wrt_bias)
-
-        dataset_size = self.training_data.feature_data.shape[0]
-
-
-        return derivative_cost_wrt_weight, derivative_cost_wrt_bias
+        return array_of_derivatives_cost_wrt_bias, array_of_derivatives_cost_wrt_weight
 
     def gradient_descent(self, learning_rate: float = 0.01, number_of_iterations: int = 1000):
         cost_over_time = []
-        weight_over_time = []
+        model_predictions_array = np.empty(0)
 
         for i in range(number_of_iterations):
             model_predictions_array = self.model_prediction_array()
-            derivative_cost_wrt_weight, derivative_cost_wrt_bias = \
+            derivative_cost_wrt_bias, derivative_cost_wrt_weight = \
                 self.compute_gradients(model_predictions_array)
 
             self.best_weight = self.best_weight - learning_rate * derivative_cost_wrt_weight
@@ -61,10 +62,9 @@ class LinearRegression:
             print(f"weight {self.best_weight} bias {self.best_bias}")
             total_cost = self.compute_total_cost(model_predictions_array)
             cost_over_time.append(total_cost)
-            weight_over_time.append(self.current_weight)
 
-        # plt.plot(cost_over_time)
-        # plt.show()
-        plt.scatter(self.training_data.feature_data[:, self.feature_idx_for_regression], self.training_data.label_data)
-        plt.plot(self.training_data.feature_data[:, self.feature_idx_for_regression], model_predictions_array, color="red")
+        plt.plot(cost_over_time)
         plt.show()
+        # plt.scatter(self.training_data.feature_data[:, self.feature_index], self.training_data.label_data)
+        # plt.plot(self.training_data.feature_data[:, self.feature_index], model_predictions_array, color="red")
+        # plt.show()
