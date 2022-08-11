@@ -59,7 +59,7 @@ class LinearRegression:
             self.best_bias = self.best_bias - learning_rate * derivative_cost_wrt_bias
 
             print(f"weight {self.best_weight} bias {self.best_bias}")
-            total_cost = self.compute_total_cost()
+            total_cost = self.compute_total_cost(model_predictions_array)
             cost_over_time.append(total_cost)
             weight_over_time.append(self.current_weight)
 
