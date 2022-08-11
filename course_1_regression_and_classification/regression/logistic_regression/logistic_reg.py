@@ -78,3 +78,14 @@ class LogisticRegression(AbstractRegression):
         dummy_array = np.tile(array_of_derivatives_cost_wrt_bias, [number_of_features, 1])
         transposed_dummy_array = dummy_array.transpose()
         return transposed_dummy_array
+
+    def _gradient_descent_iteration(self, learning_rate: float) -> float:
+        """Updates weight and bias in place, returns total cost at iteration"""
+        model_predictions_array = self._calculate_model_predictions()
+        derivative_cost_wrt_bias, derivative_cost_wrt_weight = \
+            self._compute_gradients(model_predictions_array)
+
+        self.best_weight = self.best_weight - learning_rate * derivative_cost_wrt_weight
+        self.best_bias = self.best_bias - learning_rate * derivative_cost_wrt_bias
+
+        return self._compute_total_cost(model_predictions_array)
