@@ -8,12 +8,11 @@ from course_1_regression_and_classification.regression.dataset_processing.datase
 class LinearRegression:
     def __init__(
             self,
-            training_dataset: Dataset,
             initial_weight: float = 0.0,
             initial_bias: float = 0.0,
             feature_index_for_regression: int = 0,
     ):
-        self.training_data = training_dataset
+        self.training_data = None
         self.feature_index = feature_index_for_regression
         self.best_weight = initial_weight
         self.best_bias = initial_bias
