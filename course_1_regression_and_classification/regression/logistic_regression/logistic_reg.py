@@ -52,3 +52,29 @@ class LogisticRegression(AbstractRegression):
 
         array_of_individual_loss = loss_element_1 - loss_element_2
         return array_of_individual_loss
+
+    def _compute_gradients(self, model_predictions: np.ndarray) -> Tuple[float, float]:
+        """Compute partial derivatives of cost with respect to bias and weight."""
+        array_of_derivatives_cost_wrt_bias, array_of_derivatives_cost_wrt_weight = \
+            self._compute_derivative_arrays(model_predictions)
+
+        derivative_cost_wrt_bias = array_of_derivatives_cost_wrt_bias.sum() / self.training_data.size
+        derivative_cost_wrt_weight = array_of_derivatives_cost_wrt_weight.sum(axis=0) / self.training_data.size
+
+        return derivative_cost_wrt_bias, derivative_cost_wrt_weight
+
+    def _compute_derivative_arrays(self, model_predictions: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+        """Compute individual partial derivatives of cost for each datapoint with respect to bias and weight. """
+        array_of_derivatives_cost_wrt_bias = model_predictions - \
+                                             self.training_data.label_data
+        array_of_derivatives_cost_wrt_bias_for_multiplication = \
+            self._dummy_array_of_bias_derivatives(array_of_derivatives_cost_wrt_bias)
+        array_of_derivatives_cost_wrt_weight = array_of_derivatives_cost_wrt_bias_for_multiplication \
+                                               * self.training_data.feature_data
+        return array_of_derivatives_cost_wrt_bias, array_of_derivatives_cost_wrt_weight
+
+    def _dummy_array_of_bias_derivatives(self, array_of_derivatives_cost_wrt_bias) -> np.ndarray:
+        number_of_features = self.training_data.feature_data.shape[1]
+        dummy_array = np.tile(array_of_derivatives_cost_wrt_bias, [number_of_features, 1])
+        transposed_dummy_array = dummy_array.transpose()
+        return transposed_dummy_array
