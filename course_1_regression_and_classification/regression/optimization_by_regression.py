@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-from course_1_regression_and_classification.regression.abstract_regression import AbstractRegression
+from course_1_regression_and_classification.regression.regression_model.abstract_regression import AbstractRegression
 
 class OptimizationByRegression:
     def __init__(self, regression_object: AbstractRegression):
