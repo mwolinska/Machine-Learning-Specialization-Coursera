@@ -18,30 +18,30 @@ class LinearRegression:
         self.best_weight = initial_weight
         self.best_bias = initial_bias
 
-    def model_prediction_array(self) -> np.ndarray:
+    def _model_prediction_array(self) -> np.ndarray:
         """Generate array of model predictions based on best weight and bias."""
         prediction = self.best_weight \
             * self.training_data.feature_data[:, self.feature_index] \
             + self.best_bias
         return prediction
 
-    def compute_total_cost(self, model_predictions: np.ndarray) -> np.ndarray:
+    def _compute_total_cost(self, model_predictions: np.ndarray) -> float:
         """Calculate total cost based on current model predictions."""
         cost_array = (model_predictions - self.training_data.label_data) ** 2
         total_cost = np.sum(cost_array) / (2 * self.training_data.size)
         return total_cost
 
-    def compute_gradients(self, model_predictions: np.ndarray) -> Tuple[float, float]:
+    def _compute_gradients(self, model_predictions: np.ndarray) -> Tuple[float, float]:
         """Compute partial derivatives of cost with respect to bias and weight."""
         array_of_derivatives_cost_wrt_bias, array_of_derivatives_cost_wrt_weight = \
-            self.compute_derivative_arrays(model_predictions)
+            self._compute_derivative_arrays(model_predictions)
 
         derivative_cost_wrt_bias = np.sum(array_of_derivatives_cost_wrt_bias) / self.training_data.size
         derivative_cost_wrt_weight = np.sum(array_of_derivatives_cost_wrt_weight) / self.training_data.size
 
         return derivative_cost_wrt_bias, derivative_cost_wrt_weight
 
-    def compute_derivative_arrays(self, model_predictions: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    def _compute_derivative_arrays(self, model_predictions: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         """Compute individual partial derivatives of cost for each datapoint with respect to bias and weight. """
         array_of_derivatives_cost_wrt_bias = model_predictions - \
                                              self.training_data.label_data
