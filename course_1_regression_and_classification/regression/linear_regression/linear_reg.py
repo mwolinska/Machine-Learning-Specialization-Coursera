@@ -3,6 +3,7 @@ from typing import Tuple, List
 import numpy as np
 
 from course_1_regression_and_classification.regression.dataset_processing.dataset_data_model import Dataset
+from course_1_regression_and_classification.regression.regression_model.predictor import Predictor
 
 
 class LinearRegression:
@@ -48,24 +49,44 @@ class LinearRegression:
                                                * self.training_data.feature_data[:, self.feature_index]
         return array_of_derivatives_cost_wrt_bias, array_of_derivatives_cost_wrt_weight
 
-    def gradient_descent(self, learning_rate: float = 0.01, number_of_iterations: int = 1000) -> Tuple[List, List]:
-        """Perform gradient descent, return cost over time and best model predictions. """
+    def _gradient_descent_iteration(self, learning_rate: float) -> float:
+        """Updates weight and bias in place, returns total cost at iteration"""
+        model_predictions_array = self._model_prediction_array()
+        derivative_cost_wrt_bias, derivative_cost_wrt_weight = \
+            self._compute_gradients(model_predictions_array)
+
+        self.best_weight = self.best_weight - learning_rate * derivative_cost_wrt_weight
+        self.best_bias = self.best_bias - learning_rate * derivative_cost_wrt_bias
+
+        return self._compute_total_cost(model_predictions_array)
+
+    def fit(
+            self,
+            training_dataset: Dataset,
+            learning_rate: float = 0.01,
+            number_of_iterations: int = 1000
+    ) -> Predictor:
         cost_over_time = []
-        model_predictions_array = np.empty(0)
+
+        self.training_data = Dataset.from_dataset(
+            training_dataset,
+            feature_row_tuple=(None, None),
+            feature_column_tuple=(self.feature_index, self.feature_index + 1)
+        )
 
         for i in range(number_of_iterations):
-            model_predictions_array = self.model_prediction_array()
-            derivative_cost_wrt_bias, derivative_cost_wrt_weight = \
-                self.compute_gradients(model_predictions_array)
+            total_cost_at_iteration = self._gradient_descent_iteration(learning_rate=learning_rate)
+            cost_over_time.append(total_cost_at_iteration)
 
-            self.best_weight = self.best_weight - learning_rate * derivative_cost_wrt_weight
-            self.best_bias = self.best_bias - learning_rate * derivative_cost_wrt_bias
+        model_predictions = list(self._model_prediction_array())
 
-            total_cost = self.compute_total_cost(model_predictions_array)
-            cost_over_time.append(total_cost)
-
-        model_predictions = list(model_predictions_array)
-        return cost_over_time, model_predictions
+        return Predictor(
+            weight=self.best_weight,
+            bias=self.best_bias,
+            training_data=self.training_data,
+            cost_over_time=cost_over_time,
+            model_predictions_for_training=model_predictions,
+        )
 
     def return_training_data_for_plotting(self) -> Dataset:
         """Return relevant training data used for regression as Dataset. """
