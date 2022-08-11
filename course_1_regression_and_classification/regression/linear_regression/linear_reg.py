@@ -14,6 +14,7 @@ class LinearRegression:
         self.feature_idx_for_regression = 0
         self.current_weight = 0
         self.current_bias = 0
+        self.dataset_size = self.training_data.feature_data.shape[0]
 
     def model_prediction_array(self) -> np.ndarray:
         prediction = self.current_weight \
@@ -21,14 +22,14 @@ class LinearRegression:
                      + self.current_bias
         return prediction
 
-    def compute_total_cost(self):
-        model_predictions = self.model_prediction_array()
-        dataset_size = self.training_data.feature_data.shape[0]
+    def compute_total_cost(self, model_predictions: np.ndarray) -> np.ndarray:
         cost_array = (model_predictions - self.training_data.label_data) ** 2
-        total_cost = np.sum(cost_array) / (2 * dataset_size)
+        total_cost = np.sum(cost_array) / (2 * self.dataset_size)
         return total_cost
 
     def compute_gradients(self, model_predictions: np.ndarray) -> Tuple[float, float]:
+        derivative_cost_wrt_bias = np.sum(array_of_derivatives_cost_wrt_bias) / self.dataset_size
+        derivative_cost_wrt_weight = np.sum(array_of_derivatives_cost_wrt_weight) / self.dataset_size
         array_of_derivatives_cost_wrt_bias = model_predictions - \
                                                self.training_data.label_data
         array_of_derivatives_cost_wrt_weight = array_of_derivatives_cost_wrt_bias \
@@ -39,8 +40,6 @@ class LinearRegression:
 
         dataset_size = self.training_data.feature_data.shape[0]
 
-        derivative_cost_wrt_weight = sum_array_of_derivatives_cost_wrt_weight / dataset_size
-        derivative_cost_wrt_bias = sum_array_of_derivatives_cost_wrt_bias / dataset_size
 
         return derivative_cost_wrt_weight, derivative_cost_wrt_bias
 
