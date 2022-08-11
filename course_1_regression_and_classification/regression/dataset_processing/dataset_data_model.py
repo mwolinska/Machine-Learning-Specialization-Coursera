@@ -10,6 +10,7 @@ class Dataset:
     feature_names: List
     label_data: np.ndarray
     label_name: str
+    size: int
 
     @classmethod
     def from_array(cls, dataset_array: np.ndarray) -> "Dataset":
@@ -22,6 +23,7 @@ class Dataset:
             feature_names=feature_names,
             label_data=label_data,
             label_name=label_name,
+            size=label_data.shape[0]
         )
 
     @classmethod
@@ -36,6 +38,7 @@ class Dataset:
             feature_column_tuple[0]:feature_column_tuple[1]
         ]
         new_label_data = base_dataset.label_data[feature_row_tuple[0]:feature_row_tuple[1]]
+        new_dataset_size = new_label_data.shape[0]
 
         new_feature_names = base_dataset.feature_names[feature_column_tuple[0]:feature_column_tuple[1]]
 
@@ -44,4 +47,5 @@ class Dataset:
             feature_names=new_feature_names,
             label_data=new_label_data,
             label_name=base_dataset.label_name,
+            size=new_dataset_size
         )
