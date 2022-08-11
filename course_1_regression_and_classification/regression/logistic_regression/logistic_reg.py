@@ -89,3 +89,31 @@ class LogisticRegression(AbstractRegression):
         self.best_bias = self.best_bias - learning_rate * derivative_cost_wrt_bias
 
         return self._compute_total_cost(model_predictions_array)
+
+    def fit(
+            self,
+            training_dataset: Dataset,
+            learning_rate: float = 0.01,
+            number_of_iterations: int = 1000
+    ) -> Predictor:
+        cost_over_time = []
+
+        self.training_data = training_dataset
+        # self.best_weight = np.zeros(self.training_data.feature_data.shape[1])
+
+        for i in range(number_of_iterations):
+            total_cost_at_iteration = self._gradient_descent_iteration(learning_rate=learning_rate)
+            cost_over_time.append(total_cost_at_iteration)
+
+            if i % math.ceil(number_of_iterations / 10) == 0 or i == (number_of_iterations - 1):
+                print(f"Iteration {i:4}: Cost {float(cost_over_time[-1]):8.2f}   ")
+
+        model_predictions = list(self._calculate_model_predictions())
+
+        return Predictor(
+            weight=self.best_weight,
+            bias=self.best_bias,
+            training_data=self.training_data,
+            cost_over_time=cost_over_time,
+            model_predictions_for_training=model_predictions,
+        )
