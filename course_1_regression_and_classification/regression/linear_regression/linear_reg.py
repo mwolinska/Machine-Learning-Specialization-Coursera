@@ -47,7 +47,7 @@ class LinearRegression:
             * self.training_data.feature_data[:, self.feature_index]
         return array_of_derivatives_cost_wrt_bias, array_of_derivatives_cost_wrt_weight
 
-    def gradient_descent(self, learning_rate: float = 0.01, number_of_iterations: int = 1000):
+    def gradient_descent(self, learning_rate: float = 0.01, number_of_iterations: int = 1000) -> Tuple[List, List]:
         cost_over_time = []
         model_predictions_array = np.empty(0)
 
