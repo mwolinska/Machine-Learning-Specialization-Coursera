@@ -9,17 +9,19 @@ class LinearRegression:
     def __init__(
         self,
         training_dataset: Dataset,
+        initial_weight: float = 0.0,
+        initial_bias: float = 0.0,
     ):
         self.training_data = training_dataset
         self.feature_idx_for_regression = 0
-        self.current_weight = 0
-        self.current_bias = 0
+        self.best_weight = initial_weight
+        self.best_bias = initial_bias
         self.dataset_size = self.training_data.feature_data.shape[0]
 
     def model_prediction_array(self) -> np.ndarray:
-        prediction = self.current_weight \
-                     * self.training_data.feature_data[:, self.feature_idx_for_regression] \
-                     + self.current_bias
+        prediction = self.best_weight \
+                     * self.training_data.feature_data[:, self.feature_index] \
+                     + self.best_bias
         return prediction
 
     def compute_total_cost(self, model_predictions: np.ndarray) -> np.ndarray:
@@ -52,10 +54,10 @@ class LinearRegression:
             derivative_cost_wrt_weight, derivative_cost_wrt_bias = \
                 self.compute_gradients(model_predictions_array)
 
-            self.current_weight = self.current_weight - learning_rate * derivative_cost_wrt_weight
-            self.current_bias = self.current_bias - learning_rate * derivative_cost_wrt_bias
+            self.best_weight = self.best_weight - learning_rate * derivative_cost_wrt_weight
+            self.best_bias = self.best_bias - learning_rate * derivative_cost_wrt_bias
 
-            print(f"weight {self.current_weight} bias {self.current_bias}")
+            print(f"weight {self.best_weight} bias {self.best_bias}")
             total_cost = self.compute_total_cost()
             cost_over_time.append(total_cost)
             weight_over_time.append(self.current_weight)
