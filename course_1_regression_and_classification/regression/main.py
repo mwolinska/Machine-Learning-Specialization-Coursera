@@ -5,12 +5,11 @@ from course_1_regression_and_classification.regression.regression_model.regressi
 if __name__ == '__main__':
     train, validate, test = prepare_datasets("../../datasets/coursera_lin_reg_dataset.csv", delimiter=",")
     regression_class = Regression.get_regression(Regressions.LINEAR)
-    regression_object = regression_class(
-        training_dataset=train,
-    )
+    regression_object = regression_class()
 
     optimization = OptimizationByRegression(regression_object)
     optimization.gradient_descent(
+        training_data=train,
         learning_rate=0.01,
         number_of_iterations=1000,
     )
