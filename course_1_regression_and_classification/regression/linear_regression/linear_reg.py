@@ -11,9 +11,10 @@ class LinearRegression:
         training_dataset: Dataset,
         initial_weight: float = 0.0,
         initial_bias: float = 0.0,
+        feature_index_for_regression: int = 0,
     ):
         self.training_data = training_dataset
-        self.feature_idx_for_regression = 0
+        self.feature_index = feature_index_for_regression
         self.best_weight = initial_weight
         self.best_bias = initial_bias
         self.dataset_size = self.training_data.feature_data.shape[0]
@@ -35,7 +36,7 @@ class LinearRegression:
         array_of_derivatives_cost_wrt_bias = model_predictions - \
                                                self.training_data.label_data
         array_of_derivatives_cost_wrt_weight = array_of_derivatives_cost_wrt_bias \
-            * self.training_data.feature_data[:, self.feature_idx_for_regression]
+            * self.training_data.feature_data[:, self.feature_index]
 
         sum_array_of_derivatives_cost_wrt_weight = np.sum(array_of_derivatives_cost_wrt_weight)
         sum_array_of_derivatives_cost_wrt_bias = np.sum(array_of_derivatives_cost_wrt_bias)
