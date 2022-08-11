@@ -39,3 +39,16 @@ class LogisticRegression(AbstractRegression):
             sigmoid_predictions = np.append(sigmoid_predictions, sigmoid_element)
 
         return sigmoid_predictions
+
+    def _compute_total_cost(self, model_predictions: np.ndarray) -> float:
+        array_of_loss = self._compute_loss(model_predictions)
+        total_cost = array_of_loss.sum() / self.training_data.size
+        return total_cost
+
+    def _compute_loss(self, model_predictions) -> np.ndarray:
+        loss_element_1 = - self.training_data.label_data * np.log(model_predictions)
+        loss_element_2 = (np.ones(self.training_data.size) - self.training_data.label_data) \
+                         * np.log((np.ones(self.training_data.size) - model_predictions))
+
+        array_of_individual_loss = loss_element_1 - loss_element_2
+        return array_of_individual_loss
