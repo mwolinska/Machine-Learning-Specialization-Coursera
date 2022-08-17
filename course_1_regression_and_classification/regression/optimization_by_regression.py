@@ -23,10 +23,27 @@ class OptimizationByRegression:
         plt.show()
 
     def plot_data_and_fit(self):
-        plt.scatter(self.predictor.training_data.feature_data, self.predictor.training_data.label_data, label="Training data")
-        plt.plot(self.predictor.training_data.feature_data, self.predictor.model_predictions_for_training, label="Model fit", color="red")
-        plt.title(f"Regression Training Data and Model Fit")
-        plt.xlabel(self.predictor.training_data.feature_names[0])
-        plt.ylabel(self.predictor.training_data.label_name)
+        if self.predictor.weight.shape[0] == 1:
+            plt.scatter(self.predictor.training_data.feature_data, self.predictor.training_data.label_data, label="Training data")
+            plt.plot(self.predictor.training_data.feature_data, self.predictor.model_predictions_for_training, label="Model fit", color="red")
+            plt.title(f"Regression Training Data and Model Fit")
+            plt.xlabel(self.predictor.training_data.feature_names[0])
+            plt.ylabel(self.predictor.training_data.label_name)
+
+        elif self.predictor.weight.shape[0] == 2:
+            colors = ["green", "blue"]
+            colors_list = []
+            for el in self.predictor.training_data.label_data:
+                colors_list.append(colors[int(el)])
+
+            plt.scatter(self.predictor.training_data.feature_data[:, 0],
+                        self.predictor.training_data.feature_data[:, 1],
+                        c=colors_list,
+                        )
+            plt.plot(self.predictor.training_data.feature_data[:, 0], self.predictor.model_predictions_for_training, label="Model fit", color="red")
+            plt.title(f"Regression Training Data and Model Fit")
+            plt.xlabel(self.predictor.training_data.feature_names[0])
+            plt.ylabel(self.predictor.training_data.feature_names[1])
+
         plt.legend()
         plt.show()
