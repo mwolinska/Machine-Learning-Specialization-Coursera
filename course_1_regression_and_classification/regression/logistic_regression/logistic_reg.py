@@ -108,8 +108,9 @@ class LogisticRegression(AbstractRegression):
             if i % math.ceil(number_of_iterations / 10) == 0 or i == (number_of_iterations - 1):
                 print(f"Iteration {i:4}: Cost {float(cost_over_time[-1]):8.2f}   ")
 
-        model_predictions = list(self._calculate_model_predictions())
-
+        gradient = - self.best_weight[0] / self.best_weight[1]
+        intercept = -self.best_bias / self.best_weight[1]
+        model_predictions = gradient * self.training_data.feature_data[:, 0] + intercept
         return Predictor(
             weight=self.best_weight,
             bias=self.best_bias,
